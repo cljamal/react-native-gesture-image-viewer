@@ -160,11 +160,11 @@ function App() {
 
 |속성|설명|기본값|
 |:--:|:-----|:--:|
-|`enableDismissGesture`|아래로 슬라이드 제스처 시 `onDismiss` 함수를 호출합니다. 보통 아래로 슬라이드 시 모달을 닫을 때 유용하게 활용할 수 있습니다.|`true`|
-|`enableSwipeGesture`|좌우 슬라이드 제스처를 제어할 수 있습니다. `false`일 경우 좌우 제스처는 비활성화됩니다.|`true`|
-|`enableZoomGesture`|두 손가락을 활용한 제스처를 제어할 수 있습니다. `false` 시 두 손가락을 활용한 줌 제스처는 비활성화됩니다.|`true`|
-|`enableDoubleTapGesture`|더블 터치 시 줌 제스처를 제어할 수 있습니다. `false` 시 더블 터치 줌 제스처는 비활성화됩니다.|`true`|
-|`enableZoomPanGesture`|줌이 활성화되었을 때만 동작하며, 줌 활성화 시 아이템 위치를 이동할 수 있습니다. `false` 시 줌 활성화 시 제스처 이동이 비활성화됩니다.|`true`|
+|`enableDismissGesture`|아래로 스와이프할 때 `onDismiss` 함수를 호출합니다. 모달을 아래로 스와이프해서 닫는 제스처에 유용합니다.|`true`|
+|`enableSwipeGesture`|좌우 스와이프 제스처를 제어합니다. `false`일 때 가로 제스처가 비활성화됩니다.|`true`|
+|`enableZoomGesture`|두 손가락 핀치 제스처를 제어합니다. `false`일 때 핀치 줌 제스처가 비활성화됩니다. 핀치 줌은 두 손가락 사이의 중심점을 기준으로 확대됩니다.|`true`|
+|`enableDoubleTapGesture`|더블탭 줌 제스처를 제어합니다. `false`일 때 더블탭 줌 제스처가 비활성화됩니다. 더블탭 줌은 탭한 위치를 중심으로 확대됩니다.|`true`|
+|`enableZoomPanGesture`|줌이 활성화된 상태에서만 작동하며, 확대된 상태에서 아이템 위치를 이동할 수 있게 합니다. `false`일 때 줌 상태에서의 제스처 이동이 비활성화됩니다. 콘텐츠가 화면 밖으로 나가지 않도록 자동으로 경계를 제한합니다.|`true`|
 
 ### 커스텀 컴포넌트
 

@@ -69,6 +69,20 @@ export const useGestureViewer = <T = any>({
 
   const dataLength = data?.length || 0;
 
+  const constrainToBounds = useCallback(
+    (translateX: number, translateY: number, scale: number) => {
+      'worklet';
+      const maxTranslateX = (width * scale - width) / 2;
+      const maxTranslateY = (screenHeight * scale - screenHeight) / 2;
+
+      return {
+        x: Math.max(-maxTranslateX, Math.min(maxTranslateX, translateX)),
+        y: Math.max(-maxTranslateY, Math.min(maxTranslateY, translateY)),
+      };
+    },
+    [width, screenHeight],
+  );
+
   useAnimatedReaction(
     () => scale.value,
     (currentScale) => {
@@ -207,8 +221,6 @@ export const useGestureViewer = <T = any>({
         translateY.value = event.translationY / resistance;
       })
       .onEnd((event) => {
-        'worklet';
-
         if (event.translationY > dismissThreshold && enableDismissGesture && onDismiss) {
           runOnJS(onDismiss)();
           return;
@@ -226,9 +238,25 @@ export const useGestureViewer = <T = any>({
       .enabled(enableZoomGesture)
       .onBegin(() => {
         startScale.value = scale.value;
+        initialTranslateX.value = translateX.value;
+        initialTranslateY.value = translateY.value;
       })
       .onUpdate((event) => {
-        scale.value = startScale.value * event.scale;
+        const newScale = startScale.value * event.scale;
+
+        const deltaScale = newScale - startScale.value;
+        const centerX = event.focalX - width / 2;
+        const centerY = event.focalY - screenHeight / 2;
+
+        scale.value = newScale;
+        // NOTE 새로운 이동값 = 기존 이동값 - (중심점 거리 × 스케일 변화량) / 원래 스케일 (중심점이 화면 중심에서 멀수록, 확대 배율이 클수록 더 많이 이동)
+        const newTranslateX = initialTranslateX.value - (centerX * deltaScale) / startScale.value;
+        const newTranslateY = initialTranslateY.value - (centerY * deltaScale) / startScale.value;
+
+        const constrained = constrainToBounds(newTranslateX, newTranslateY, newScale);
+
+        translateX.value = constrained.x;
+        translateY.value = constrained.y;
       })
       .onEnd(() => {
         if (scale.value > maxZoomScale) {
@@ -236,6 +264,12 @@ export const useGestureViewer = <T = any>({
             duration: 300,
             easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
           });
+
+          const constrained = constrainToBounds(translateX.value, translateY.value, maxZoomScale);
+
+          translateX.value = withTiming(constrained.x);
+          translateY.value = withTiming(constrained.y);
+
           return;
         }
 
@@ -248,7 +282,19 @@ export const useGestureViewer = <T = any>({
           translateY.value = withTiming(0);
         }
       });
-  }, [scale, enableZoomGesture, maxZoomScale, translateX, translateY, startScale]);
+  }, [
+    scale,
+    enableZoomGesture,
+    maxZoomScale,
+    translateX,
+    translateY,
+    startScale,
+    initialTranslateX,
+    initialTranslateY,
+    width,
+    screenHeight,
+    constrainToBounds,
+  ]);
 
   const zoomPanGesture = useMemo(() => {
     return Gesture.Pan()
@@ -258,20 +304,14 @@ export const useGestureViewer = <T = any>({
         initialTranslateY.value = translateY.value;
       })
       .onUpdate((event) => {
-        'worklet';
-
         if (scale.value > 1) {
-          const maxTranslateX = (width * scale.value - width) / 2;
-          const maxTranslateY = (screenHeight * scale.value - screenHeight) / 2;
+          const newTranslateX = initialTranslateX.value + event.translationX;
+          const newTranslateY = initialTranslateY.value + event.translationY;
 
-          translateX.value = Math.max(
-            -maxTranslateX,
-            Math.min(maxTranslateX, initialTranslateX.value + event.translationX),
-          );
-          translateY.value = Math.max(
-            -maxTranslateY,
-            Math.min(maxTranslateY, initialTranslateY.value + event.translationY),
-          );
+          const constrained = constrainToBounds(newTranslateX, newTranslateY, scale.value);
+
+          translateX.value = constrained.x;
+          translateY.value = constrained.y;
         }
       });
   }, [
@@ -282,32 +322,46 @@ export const useGestureViewer = <T = any>({
     scale,
     initialTranslateX,
     initialTranslateY,
-    width,
-    screenHeight,
+    constrainToBounds,
   ]);
 
   const doubleTapGesture = useMemo(() => {
     return Gesture.Tap()
       .enabled(enableDoubleTapGesture)
       .numberOfTaps(2)
-      .onEnd(() => {
+      .onEnd((event) => {
         const nextScale = scale.value > 1 ? 1 : maxZoomScale;
 
-        translateX.value = withTiming(0, {
-          duration: 300,
-          easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
-        });
-        translateY.value = withTiming(0, {
-          duration: 300,
-          easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
-        });
+        if (nextScale > 1) {
+          const centerX = event.x - width / 2;
+          const centerY = event.y - screenHeight / 2;
+
+          // NOTE 확대로 밀려난 거리만큼 반대로 이동해서 탭 지점을 제자리에 유지
+          translateX.value = withTiming(-centerX * (nextScale - 1), {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
+          });
+          translateY.value = withTiming(-centerY * (nextScale - 1), {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
+          });
+        } else {
+          translateX.value = withTiming(0, {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
+          });
+          translateY.value = withTiming(0, {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
+          });
+        }
 
         scale.value = withTiming(nextScale, {
           duration: 300,
           easing: Easing.bezier(0.25, 0.1, 0.25, 1.0),
         });
       });
-  }, [scale, enableDoubleTapGesture, maxZoomScale, translateX, translateY]);
+  }, [scale, enableDoubleTapGesture, maxZoomScale, translateX, translateY, width, screenHeight]);
 
   const zoomGesture = useMemo(() => {
     return Gesture.Simultaneous(zoomPinchGesture, zoomPanGesture, doubleTapGesture);

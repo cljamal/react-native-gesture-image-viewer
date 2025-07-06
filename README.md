@@ -162,9 +162,9 @@ function App() {
 |:--:|:-----|:--:|
 |`enableDismissGesture`|Calls `onDismiss` function when swiping down. Useful for closing modals with downward swipe gestures.|`true`|
 |`enableSwipeGesture`|Controls left/right swipe gestures. When `false`, horizontal gestures are disabled.|`true`|
-|`enableZoomGesture`|Controls two-finger pinch gestures. When `false`, two-finger zoom gestures are disabled.|`true`|
-|`enableDoubleTapGesture`|Controls double-tap zoom gestures. When `false`, double-tap zoom gestures are disabled.|`true`|
-|`enableZoomPanGesture`|Only works when zoom is active, allows moving item position when zoomed. When `false`, gesture movement is disabled during zoom.|`true`|
+|`enableZoomGesture`|Controls two-finger pinch gestures with focal point zooming. When `false`, pinch zoom is disabled. Zoom centers on the point between your two fingers for intuitive scaling.|`true`|
+|`enableDoubleTapGesture`|Controls double-tap zoom gestures with precision targeting. When `false`, double-tap zoom is disabled. Zoom centers exactly on the tapped location.|`true`|
+|`enableZoomPanGesture`|Enables panning when zoomed in with automatic boundary detection. When `false`, movement is disabled during zoom. Prevents content from moving outside visible screen area.|`true`|
 
 ### Custom Components
 
