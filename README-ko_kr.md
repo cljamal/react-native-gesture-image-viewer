@@ -265,7 +265,7 @@ function App() {
 }
 ```
 
-### API Reference
+#### API Reference
 
 | 속성 | 설명 | 타입 | 기본값 |
 |:-----|:-----|:-----|:-----:|
@@ -279,26 +279,61 @@ function App() {
 | `resetZoom` | 지정된 스케일로 줌을 초기화합니다. | `(scale?: number) => void` | `1` |
 | `rotate` | 지정된 각도만큼 회전합니다. | `(angle?: number, clockwise?: boolean) => void` | `90, true` |
 
-### Parameters
+#### Parameters
 
-#### `zoomIn(multiplier?)`
-- **multiplier**: 확대할 배수 (범위: `0.01 ~ 1`)
-- 예: `zoomIn(0.5)` → 현재 스케일의 50% 만큼 추가 확대
+- `zoomIn(multiplier?)`
+  - **multiplier**: 확대할 배수 (범위: `0.01 ~ 1`)
+  - 예: `zoomIn(0.5)` → 현재 스케일의 50% 만큼 추가 확대
+- `zoomOut(multiplier?)`
+  - **multiplier**: 축소할 배수 (범위: `0.01 ~ 1`) 
+  - 예: `zoomOut(0.3)` → 현재 스케일을 1.3으로 나누어 축소
+- `resetZoom(scale?)`
+  - **scale**: 초기화할 스케일 값
+  - 예: `resetZoom(1.5)` → 1.5배 스케일로 초기화
+- `rotate(angle?, clockwise?)`
+  - **angle**: 회전할 각도 (0, 90, 180, 270, 360)
+  - **clockwise**: 회전 방향 (true: 시계방향, false: 반시계방향)
+  - 예: `rotate(90)` → 90도 시계방향 회전
+  - 예: `rotate(90, false)` → 90도 반시계방향 회전
+  - 예: `rotate(0)` → 회전 초기화
 
-#### `zoomOut(multiplier?)`
-- **multiplier**: 축소할 배수 (범위: `0.01 ~ 1`) 
-- 예: `zoomOut(0.3)` → 현재 스케일을 1.3으로 나누어 축소
+### useGestureViewerEvent
+`useGestureViewerEvent` 훅을 사용하여 `GestureViewer`의 특정 이벤트를 구독할 수 있습니다. 줌이나 회전과 같은 실시간 제스처 변화에 반응할 수 있습니다.
 
-#### `resetZoom(scale?)`
-- **scale**: 초기화할 스케일 값
-- 예: `resetZoom(1.5)` → 1.5배 스케일로 초기화
+```tsx
+import { GestureViewer, useGestureViewerEvent } from 'react-native-gesture-image-viewer';
 
-#### `rotate(angle?, clockwise?)`
-- **angle**: 회전할 각도 (0, 90, 180, 270, 360)
-- **clockwise**: 회전 방향 (true: 시계방향, false: 반시계방향)
-- 예: `rotate(90)` → 90도 시계방향 회전
-- 예: `rotate(90, false)` → 90도 반시계방향 회전
-- 예: `rotate(0)` → 회전 초기화
+function App() {
+  // 기본 인스턴스 (ID: 'default')의 줌 변경 이벤트 구독
+  useGestureViewerEvent('zoomChange', (data) => {
+    console.log(`줌 변경: ${data.previousScale} → ${data.scale}`);
+  });
+
+  // 기본 인스턴스 (ID: 'default')의 회전 변경 이벤트 구독
+  useGestureViewerEvent('rotationChange', (data) => {
+    console.log(`회전 변경: ${data.previousRotation}° → ${data.rotation}°`);
+  });
+
+  // 특정 인스턴스의 이벤트 구독
+  useGestureViewerEvent('gallery', 'zoomChange', (data) => {
+    console.log(`갤러리 줌: ${data.scale}배`);
+  });
+
+  return (
+    <GestureViewer
+      data={images}
+      renderItem={renderImage}
+    />
+  );
+}
+```
+
+#### 이벤트 타입
+
+| 이벤트 | 설명 | 데이터 |
+|:-----|:-----|:-----|
+| `zoomChange` | 핀치 제스처 중 줌 스케일이 변경될 때 발생 | `{ scale: number, previousScale: number }` |
+| `rotationChange` | 회전 제스처 중 회전 각도가 변경될 때 발생 | `{ rotation: number, previousRotation: number }` |
 
 ### 다중 인스턴스 관리
 

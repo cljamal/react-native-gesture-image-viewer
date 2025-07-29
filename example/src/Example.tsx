@@ -3,7 +3,7 @@ import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { useCallback, useState } from 'react';
 import { Button, Modal, StyleSheet, Text, View } from 'react-native';
-import { GestureViewer, useGestureViewerController } from 'react-native-gesture-image-viewer';
+import { GestureViewer, useGestureViewerController, useGestureViewerEvent } from 'react-native-gesture-image-viewer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const images = [
@@ -22,6 +22,13 @@ function Example() {
 
   const insets = useSafeAreaInsets();
 
+  useGestureViewerEvent('zoomChange', (data) => {
+    console.log(`Zoom changed from ${data.previousScale} to ${data.scale}`);
+  });
+
+  useGestureViewerEvent('rotationChange', (data) => {
+    console.log(`Rotation changed from ${data.previousRotation}° to ${data.rotation}°`);
+  });
   const renderImage = useCallback((imageUrl: string) => {
     return (
       <Image

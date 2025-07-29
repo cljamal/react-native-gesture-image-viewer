@@ -76,16 +76,38 @@ export const useGestureViewer = <T = any>({
     [width, screenHeight],
   );
 
+  const emitZoomChange = useCallback(
+    (currentScale: number, prevScale: number | null) => {
+      manager?.emitZoomChange(currentScale, prevScale);
+    },
+    [manager],
+  );
+
+  const emitRotationChange = useCallback(
+    (currentRotation: number, prevRotation: number | null) => {
+      manager?.emitRotationChange(currentRotation, prevRotation);
+    },
+    [manager],
+  );
+
   useAnimatedReaction(
     () => scale.value,
-    (currentScale) => {
+    (currentScale, previousScale) => {
+      if (manager && currentScale !== previousScale) {
+        runOnJS(emitZoomChange)(currentScale, previousScale);
+      }
+
       runOnJS(setIsZoomed)(currentScale > 1);
     },
   );
 
   useAnimatedReaction(
     () => rotation.value,
-    (currentRotation) => {
+    (currentRotation, previousRotation) => {
+      if (manager && currentRotation !== previousRotation) {
+        runOnJS(emitRotationChange)(currentRotation, previousRotation);
+      }
+
       runOnJS(setIsRotated)(currentRotation % 360 !== 0);
     },
   );

@@ -281,3 +281,12 @@ export type GestureViewerControllerState = {
    */
   readonly totalCount: number;
 };
+
+export type GestureViewerEventType = 'zoomChange' | 'rotationChange';
+
+export type GestureViewerEventData = {
+  zoomChange: { scale: number; previousScale: number | null };
+  rotationChange: { rotation: number; previousRotation: number | null };
+};
+
+export type GestureViewerEventCallback<T extends GestureViewerEventType> = (data: GestureViewerEventData[T]) => void;

@@ -1,3 +1,11 @@
 export { GestureViewer } from './GestureViewer';
-export type { GestureViewerController, GestureViewerProps } from './types';
+export type {
+  GestureViewerController,
+  GestureViewerControllerState,
+  GestureViewerEventCallback,
+  GestureViewerEventData,
+  GestureViewerEventType,
+  GestureViewerProps,
+} from './types';
 export { useGestureViewerController } from './useGestureViewerController';
+export { useGestureViewerEvent } from './useGestureViewerEvent';

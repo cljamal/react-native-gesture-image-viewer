@@ -1,5 +1,10 @@
 import { type SharedValue, withTiming } from 'react-native-reanimated';
-import type { GestureViewerControllerState } from './types';
+import type {
+  GestureViewerControllerState,
+  GestureViewerEventCallback,
+  GestureViewerEventData,
+  GestureViewerEventType,
+} from './types';
 import { createBoundsConstraint } from './utils';
 
 class GestureViewerManager {
@@ -15,6 +20,7 @@ class GestureViewerManager {
   private enableSwipeGesture = true;
   private listeners = new Set<(state: GestureViewerControllerState) => void>();
   private rotation: SharedValue<number> | null = null;
+  private eventListeners = new Map<GestureViewerEventType, Set<(data: any) => void>>();
 
   private notifyListeners() {
     const state = this.getState();
@@ -29,6 +35,42 @@ class GestureViewerManager {
       this.listeners.delete(listener);
     };
   }
+
+  addEventListener<T extends GestureViewerEventType>(eventType: T, callback: GestureViewerEventCallback<T>) {
+    if (!this.eventListeners.has(eventType)) {
+      this.eventListeners.set(eventType, new Set());
+    }
+
+    this.eventListeners.get(eventType)?.add(callback);
+
+    return () => {
+      const listeners = this.eventListeners.get(eventType);
+
+      if (listeners) {
+        listeners.delete(callback);
+
+        if (listeners.size === 0) {
+          this.eventListeners.delete(eventType);
+        }
+      }
+    };
+  }
+
+  private emitEvent<T extends GestureViewerEventType>(eventType: T, data: GestureViewerEventData[T]) {
+    const listeners = this.eventListeners.get(eventType);
+
+    if (listeners) {
+      listeners.forEach((callback) => callback(data));
+    }
+  }
+
+  emitZoomChange = (scale: number, previousScale: number | null) => {
+    this.emitEvent('zoomChange', { scale, previousScale });
+  };
+
+  emitRotationChange = (rotation: number, previousRotation: number | null) => {
+    this.emitEvent('rotationChange', { rotation, previousRotation });
+  };
 
   getState() {
     return {
@@ -212,6 +254,7 @@ class GestureViewerManager {
     this.translateX = null;
     this.translateY = null;
     this.rotation = null;
+    this.eventListeners.clear();
   }
 }
 

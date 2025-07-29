@@ -265,7 +265,7 @@ function App() {
 }
 ```
 
-### API Reference
+#### API Reference
 
 | Property | Description | Type | Default |
 |:---------|:------------|:-----|:-------:|
@@ -279,26 +279,62 @@ function App() {
 | `resetZoom` | Reset zoom to the specified scale. | `(scale?: number) => void` | `1` |
 | `rotate` | Rotate by the specified angle. | `(angle?: number, clockwise?: boolean) => void` | `90, true` |
 
-### Parameters
+#### Parameters
 
-#### `zoomIn(multiplier?)`
-- **multiplier**: The multiplier for zooming in (range: `0.01 ~ 1`)
-- Example: `zoomIn(0.5)` → Zoom in by an additional 50% of the current scale
+- `zoomIn(multiplier?)`
+  - **multiplier**: The multiplier for zooming in (range: `0.01 ~ 1`)
+  - Example: `zoomIn(0.5)` → Zoom in by an additional 50% of the current scale
+- `zoomOut(multiplier?)`
+  - **multiplier**: The multiplier for zooming out (range: `0.01 ~ 1`) 
+  - Example: `zoomOut(0.3)` → Zoom out by dividing the current scale by 1.3
+- `resetZoom(scale?)`
+  - **scale**: The scale value to reset to
+  - Example: `resetZoom(1.5)` → Reset to 1.5x scale
+- `rotate(angle?, clockwise?)`
+  - **angle**: The angle to rotate (0, 90, 180, 270, 360)
+  - **clockwise**: The direction to rotate (true: clockwise, false: counter-clockwise)
+  - Example: `rotate(90)` → Rotate 90 degrees clockwise
+  - Example: `rotate(90, false)` → Rotate 90 degrees counter-clockwise
+  - Example: `rotate(0)` → Reset rotation
 
-#### `zoomOut(multiplier?)`
-- **multiplier**: The multiplier for zooming out (range: `0.01 ~ 1`) 
-- Example: `zoomOut(0.3)` → Zoom out by dividing the current scale by 1.3
+### useGestureViewerEvent
 
-#### `resetZoom(scale?)`
-- **scale**: The scale value to reset to
-- Example: `resetZoom(1.5)` → Reset to 1.5x scale
+You can subscribe to specific events from `GestureViewer` using the `useGestureViewerEvent` hook. This allows you to respond to real-time gesture changes like zoom and rotation.
 
-#### `rotate(angle?, clockwise?)`
-- **angle**: The angle to rotate (0, 90, 180, 270, 360)
-- **clockwise**: The direction to rotate (true: clockwise, false: counter-clockwise)
-- Example: `rotate(90)` → Rotate 90 degrees clockwise
-- Example: `rotate(90, false)` → Rotate 90 degrees counter-clockwise
-- Example: `rotate(0)` → Reset rotation
+```tsx
+import { GestureViewer, useGestureViewerEvent } from 'react-native-gesture-image-viewer';
+
+function App() {
+  // Listen to zoom changes on the default instance (ID: 'default')
+  useGestureViewerEvent('zoomChange', (data) => {
+    console.log(`Zoom changed from ${data.previousScale} to ${data.scale}`);
+  });
+
+  // Listen to rotation changes on the default instance (ID: 'default')
+  useGestureViewerEvent('rotationChange', (data) => {
+    console.log(`Rotation changed from ${data.previousRotation}° to ${data.rotation}°`);
+  });
+
+  // Listen to events on a specific instance
+  useGestureViewerEvent('gallery', 'zoomChange', (data) => {
+    console.log(`Gallery zoom: ${data.scale}x`);
+  });
+
+  return (
+    <GestureViewer
+      data={images}
+      renderItem={renderImage}
+    />
+  );
+}
+```
+
+#### Event Types
+
+| Event | Description | Data |
+|:-----|:-----|:-----|
+| `zoomChange` | Fired when the zoom scale changes during pinch gestures | `{ scale: number, previousScale: number }` |
+| `rotationChange` | Fired when the rotation angle changes during rotation gestures | `{ rotation: number, previousRotation: number }` |
 
 ### Style Customization
 
