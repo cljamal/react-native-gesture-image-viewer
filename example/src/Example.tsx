@@ -30,6 +30,7 @@ function Example() {
   useGestureViewerEvent('rotationChange', (data) => {
     console.log(`Rotation changed from ${data.previousRotation}° to ${data.rotation}°`);
   });
+
   const renderImage = useCallback((imageUrl: string) => {
     return (
       <Image
@@ -43,8 +44,10 @@ function Example() {
 
   return (
     <View style={styles.container}>
-      <Button title={`Loop: ${enableLoop ? 'ON' : 'OFF'}`} onPress={() => setEnableLoop(!enableLoop)} />
-      <Button title="Open Gallery" onPress={() => setVisible(true)} />
+      <View style={styles.buttonWrapper}>
+        <Button title={`Loop: ${enableLoop ? 'ON' : 'OFF'}`} onPress={() => setEnableLoop(!enableLoop)} />
+        <Button title="Open Gallery" onPress={() => setVisible(true)} />
+      </View>
       <Modal visible={visible} onRequestClose={() => setVisible(false)}>
         <View style={{ flex: 1 }}>
           <GestureViewer
@@ -174,6 +177,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonWrapper: {
+    gap: 8,
   },
 });
 
