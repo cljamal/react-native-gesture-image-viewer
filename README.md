@@ -3,7 +3,7 @@
 > English | [한국어](./README-ko_kr.md)
 
 <div align="center">
-  <img src="./assets/logo.png" width="400px" alt="React Native Gesture Image Viewer logo" />
+  <img src="./assets/logo.png" width="300px" alt="React Native Gesture Image Viewer logo" />
 </div>
 
 ## Overview
