@@ -167,8 +167,10 @@ export type GestureViewerController = {
    *
    * @example
    * ```typescript
+   * const { totalCount } = useGestureViewerState();
+   *
    * controller.goToIndex(0); // Go to first item
-   * controller.goToIndex(controller.totalCount - 1); // Go to last item
+   * controller.goToIndex(totalCount - 1); // Go to last item
    * ```
    */
   goToIndex: (index: number) => void;
@@ -252,13 +254,13 @@ export type GestureViewerController = {
    * ```
    */
   rotate: (angle?: RotationAngle, clockwise?: boolean) => void;
-} & GestureViewerControllerState;
+};
 
 /**
  * State information for the gesture viewer controller.
  * Contains read-only properties that reflect the current state.
  */
-export type GestureViewerControllerState = {
+export type GestureViewerState = {
   /**
    * The current index of the active item in the viewer.
    *
@@ -267,7 +269,7 @@ export type GestureViewerControllerState = {
    *
    * @example
    * ```typescript
-   * console.log(`Currently viewing item ${controller.currentIndex + 1} of ${controller.totalCount}`);
+   * console.log(`Currently viewing item ${currentIndex + 1} of ${totalCount}`);
    * ```
    */
   readonly currentIndex: number;
@@ -280,8 +282,8 @@ export type GestureViewerControllerState = {
    *
    * @example
    * ```typescript
-   * const hasNext = controller.currentIndex < controller.totalCount - 1;
-   * const hasPrevious = controller.currentIndex > 0;
+   * const hasNext = currentIndex < totalCount - 1;
+   * const hasPrevious = currentIndex > 0;
    * ```
    */
   readonly totalCount: number;
