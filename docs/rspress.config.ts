@@ -10,7 +10,7 @@ export default defineConfig({
   logo: '/logo.png',
   logoText: 'React Native Gesture Image Viewer',
   multiVersion: {
-    default: '2.x',
+    default: '1.x',
     versions: ['1.x', '2.x'],
   },
   search: {

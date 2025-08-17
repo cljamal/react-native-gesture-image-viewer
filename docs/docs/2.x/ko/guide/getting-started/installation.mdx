@@ -41,6 +41,10 @@ import { Steps, PackageManagerTabs } from '@rspress/core/theme';
 
   #### Expo
 
+  :::warning Expo Go 지원
+  Expo Go 환경에서 Reanimated 4를 사용하려면 [Expo SDK 54(beta)](https://expo.dev/go)를 사용해야 합니다.
+  :::
+
   Expo를 사용할 경우 `expo prebuild`를 실행하여 ios와 android 디렉토리의 네이티브 코드를 업데이트합니다.
 
   <PackageManagerTabs command="expo prebuild" />
@@ -80,4 +84,4 @@ import { Steps, PackageManagerTabs } from '@rspress/core/theme';
 모든 설정이 끝났습니다! 🎉   
 이제 `react-native-gesture-image-viewer`를 설치하면 됩니다.
 
-<PackageManagerTabs command="install react-native-gesture-image-viewer" />
+<PackageManagerTabs command="install react-native-gesture-image-viewer@beta" />

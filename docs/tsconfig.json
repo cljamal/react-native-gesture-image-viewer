@@ -11,9 +11,13 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@components": ["./components"],
+      "@theme": ["./theme"],
+    },
   },
-  "include": ["docs", "theme", "rspress.config.ts", "components", "expo-snack.d.ts"],
+  "include": ["docs/**/*", "theme/**/*", "rspress.config.ts", "components/**/*", "expo-snack.d.ts"],
   "mdx": {
     "checkMdx": true
   }

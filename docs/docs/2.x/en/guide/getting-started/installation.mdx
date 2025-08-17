@@ -39,6 +39,11 @@ Therefore, you **must install** React Native Reanimated and Gesture Handler befo
   ### Configure Babel
 
   #### Expo
+
+  :::warning Expo Go Support
+  To use Reanimated 4 in Expo Go environment, you need to use [Expo SDK 54(beta)](https://expo.dev/go).
+  :::
+
   Run prebuild to update the native code in the ios and android directories.
 
   <PackageManagerTabs command="expo prebuild" />
@@ -77,4 +82,4 @@ Therefore, you **must install** React Native Reanimated and Gesture Handler befo
 You’re all set! 🎉   
 Start by installing `react-native-gesture-image-viewer`
 
-<PackageManagerTabs command="install react-native-gesture-image-viewer" />
+<PackageManagerTabs command="install react-native-gesture-image-viewer@beta" />
