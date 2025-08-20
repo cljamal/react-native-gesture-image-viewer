@@ -57,10 +57,16 @@ import {
 function App() {
   const images = [...];
   const [visible, setVisible] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const { goToIndex, goToPrevious, goToNext } = useGestureViewerController();
 
   const { currentIndex, totalCount } = useGestureViewerState();
+
+  const openModal = (index: number) => {
+    setSelectedIndex(index);
+    setVisible(true);
+  };
 
   const renderImage = useCallback((imageUrl: string) => {
     return <Image source={{ uri: imageUrl }} style={{ width: '100%', height: '100%' }} resizeMode="contain" />;
@@ -73,15 +79,16 @@ function App() {
   return (
     <View>
       {images.map((uri, index) => (
-        <GestureTrigger key={uri} onPress={() => setVisible(true)}>
+        <GestureTrigger key={uri} onPress={() => openModal(index)}>
           <Pressable>
             <Image source={{ uri }} />
           </Pressable>
         </GestureTrigger>
       ))}
-      <Modal visible={visible} onRequestClose={() => setVisible(false)}>
+      <Modal transparent visible={visible}>
         <GestureViewer
           data={images}
+          initialIndex={selectedIndex}
           renderItem={renderImage}
           ListComponent={ScrollView}
           onDismiss={() => setVisible(false)}
