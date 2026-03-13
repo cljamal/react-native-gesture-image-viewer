@@ -98,6 +98,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.7",
+    "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.29.5",
     "@commitlint/config-conventional": "^19.6.0",
     "@evilmartians/lefthook": "^1.5.0",

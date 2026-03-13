@@ -10885,7 +10885,6 @@ __metadata:
     "@babel/core": "npm:^7.27.7"
     "@babel/plugin-proposal-export-namespace-from": "npm:^7.18.9"
     "@babel/runtime": "npm:^7.28.4"
-    "@changesets/changelog-github": "npm:^0.6.0"
     "@expo/metro-runtime": "npm:~6.1.2"
     "@expo/vector-icons": "npm:^15.0.2"
     "@shopify/flash-list": "npm:2.0.2"
@@ -10912,6 +10911,7 @@ __metadata:
   resolution: "react-native-gesture-image-viewer@workspace:."
   dependencies:
     "@babel/core": "npm:^7.27.7"
+    "@changesets/changelog-github": "npm:^0.6.0"
     "@changesets/cli": "npm:^2.29.5"
     "@commitlint/config-conventional": "npm:^19.6.0"
     "@evilmartians/lefthook": "npm:^1.5.0"
