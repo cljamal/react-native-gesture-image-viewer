@@ -1,13 +1,17 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": null,
+  "plugins": ["eslint", "react", "import", "oxc", "typescript"],
   "categories": {
     "correctness": "error",
     "perf": "error",
     "nursery": "error",
     "suspicious": "error"
   },
-  "rules": {},
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/style-prop-object": "off",
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }]
+  },
   "settings": {
     "jsx-a11y": {
       "polymorphicPropName": null,
