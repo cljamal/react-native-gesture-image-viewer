@@ -68,7 +68,7 @@ function Example() {
         <Text style={styles.text}>Click on thumbnail to open!</Text>
         <View style={styles.galleryContainer}>
           {images.map((uri, index) => (
-            <GestureTrigger key={uri} onPress={() => modalOpen(index)}>
+            <GestureTrigger key={uri} index={index} onPress={() => modalOpen(index)}>
               <Pressable style={styles.thumb}>
                 <Image source={{ uri }} style={styles.thumbImage} contentFit="cover" />
               </Pressable>
