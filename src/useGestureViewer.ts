@@ -475,7 +475,7 @@ export const useGestureViewer = <ItemT, LC>({
         translateY.value = event.translationY / dismissOptions.resistance;
       })
       .onEnd((event) => {
-        if (canDismiss && event.translationY > dismissOptions.threshold) {
+        if (canDismiss && Math.abs(event.translationY) > dismissOptions.threshold) {
           scheduleOnRN(handleDismiss);
           return;
         }
@@ -693,7 +693,7 @@ export const useGestureViewer = <ItemT, LC>({
       return { opacity: baseOpacity };
     }
 
-    const dismissOpacity = interpolate(translateY.value, [0, 200], [1, 0], 'clamp');
+    const dismissOpacity = interpolate(Math.abs(translateY.value), [0, 200], [1, 0], 'clamp');
 
     return { opacity: baseOpacity * dismissOpacity };
   }, [dismissOptions.fadeBackdrop]);
